@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import './BoardContent.scss'
-import Column from 'components/Column/Column'
+import { Container, Draggable } from 'react-smooth-dnd'
 import { initialData } from 'actions/initialData'
 import { isEmpty } from 'lodash'
 import { mapOrder } from 'utilities/sort'
+
+import './BoardContent.scss'
+import Column from 'components/Column/Column'
 
 const BoardContent = () => {
     const [board, setBoard] = useState({})
@@ -16,7 +18,9 @@ const BoardContent = () => {
         if (boardFromDB) {
             setBoard(boardFromDB)
 
-            setColumns(mapOrder(boardFromDB.columns, boardFromDB.columnOrder, 'id'))
+            setColumns(
+                mapOrder(boardFromDB.columns, boardFromDB.columnOrder, 'id')
+            )
         }
     }, [])
 
@@ -31,11 +35,29 @@ const BoardContent = () => {
         )
     }
 
+    const onColumnDrop = (dropResult) => {
+        console.log(dropResult)
+    }
+
     return (
         <div className='board-content'>
-            {columns.map((column, index) => (
-                <Column key={index} column={column} />
-            ))}
+            <Container
+                orientation='horizontal'
+                onDrop={onColumnDrop}
+                dragHandleSelector='.column-drag-handle'
+                getChildPayload={index => columns[index]}
+                dropPlaceholder={{
+                    animationDuration: 150,
+                    showOnTop: true,
+                    className: 'column-drop-preview',
+                }}
+            >
+                {columns.map((column, index) => (
+                    <Draggable key={index}>
+                        <Column column={column} />
+                    </Draggable>
+                ))}
+            </Container>
         </div>
     )
 }
