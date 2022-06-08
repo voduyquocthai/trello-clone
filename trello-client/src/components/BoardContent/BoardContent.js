@@ -3,6 +3,7 @@ import { Container, Draggable } from 'react-smooth-dnd'
 import { initialData } from 'actions/initialData'
 import { isEmpty } from 'lodash'
 import { mapOrder } from 'utilities/sort'
+import { applyDrag } from 'utilities/dragDrop'
 
 import './BoardContent.scss'
 import Column from 'components/Column/Column'
@@ -37,6 +38,30 @@ const BoardContent = () => {
 
     const onColumnDrop = (dropResult) => {
         console.log(dropResult)
+        let newColumns = [...columns]
+        newColumns = applyDrag(newColumns, dropResult)
+
+        let newBoard = { ...board }
+        newBoard.columnOrder = newColumns.map((c) => c.id)
+        newBoard.columns = newColumns
+
+        setColumns(newColumns)
+        setBoard(newBoard)
+    }
+
+    const onCardDrop = (columnId, dropResult) => {
+        console.log(dropResult)
+        if (
+            dropResult.removedIndex !== null ||
+            dropResult.addedIndex !== null
+        ) {
+            let newColumns = [...columns]
+            let currentColumn = newColumns.find((c) => c.id === columnId)
+            currentColumn.cards = applyDrag(currentColumn.cards, dropResult)
+            currentColumn.cardOrder = currentColumn.cards.map((i) => i.id)
+
+            setColumns(newColumns)
+        }
     }
 
     return (
@@ -45,7 +70,7 @@ const BoardContent = () => {
                 orientation='horizontal'
                 onDrop={onColumnDrop}
                 dragHandleSelector='.column-drag-handle'
-                getChildPayload={index => columns[index]}
+                getChildPayload={(index) => columns[index]}
                 dropPlaceholder={{
                     animationDuration: 150,
                     showOnTop: true,
@@ -54,7 +79,7 @@ const BoardContent = () => {
             >
                 {columns.map((column, index) => (
                     <Draggable key={index}>
-                        <Column column={column} />
+                        <Column column={column} onCardDrop={onCardDrop} />
                     </Draggable>
                 ))}
             </Container>

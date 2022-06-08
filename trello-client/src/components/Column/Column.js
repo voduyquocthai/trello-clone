@@ -5,12 +5,8 @@ import { mapOrder } from 'utilities/sort'
 import { Container, Draggable } from 'react-smooth-dnd'
 
 const Column = (props) => {
-    const { column } = props
+    const { column, onCardDrop } = props
     const cards = mapOrder(column.cards, column.cardOrder, 'id')
-
-    const onCardDrop = (dropResult) => {
-        console.log(dropResult)
-    }
 
     return (
         <div className='column'>
@@ -18,7 +14,7 @@ const Column = (props) => {
             <div className='card-list'>
                 <Container
                     groupName='columns'
-                    onDrop={onCardDrop}
+                    onDrop={dropResult => onCardDrop(column.id, dropResult)}
                     getChildPayload={(index) => cards[index]}
                     dragClass='card-ghost'
                     dropClass='card-ghost-drop'
