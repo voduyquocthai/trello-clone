@@ -14,7 +14,7 @@ const Column = (props) => {
             <div className='card-list'>
                 <Container
                     groupName='columns'
-                    onDrop={dropResult => onCardDrop(column.id, dropResult)}
+                    onDrop={(dropResult) => onCardDrop(column.id, dropResult)}
                     getChildPayload={(index) => cards[index]}
                     dragClass='card-ghost'
                     dropClass='card-ghost-drop'
@@ -32,7 +32,12 @@ const Column = (props) => {
                     ))}
                 </Container>
             </div>
-            <footer className='column-drag-handle'>Add another card</footer>
+            <footer className='column-drag-handle'>
+                <div className='footer-actions'>
+                    <i className='fa fa-plus icon' />
+                    Add another card
+                </div>
+            </footer>
         </div>
     )
 }

@@ -37,7 +37,7 @@ const BoardContent = () => {
     }
 
     const onColumnDrop = (dropResult) => {
-        console.log(dropResult)
+        //console.log(dropResult)
         let newColumns = [...columns]
         newColumns = applyDrag(newColumns, dropResult)
 
@@ -83,6 +83,9 @@ const BoardContent = () => {
                     </Draggable>
                 ))}
             </Container>
+            <div className='add-new-column'>
+                <i className='fa fa-plus icon' /> Add new column
+            </div>
         </div>
     )
 }
